@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Name: removeall
+
+# Description: efficiently remove large files using perl script (reference : https://www.slashroot.in/which-is-the-fastest-method-to-delete-files-in-linux)
+
+
+read -p "[removeall] All files and directories will be permamently deleted. Are you sure to proceed [Y/n]? " -n 1 -r
+echo
+
+if [[ $REPLY =~ ^Y$ ]]
+then
+  perl -e 'for(<*>){((stat)[9]<(unlink))}'
+fi

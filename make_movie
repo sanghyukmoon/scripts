@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# A short script for movie making
+# Author: Sanghyuk Moon
+# Date: July 2019
+# references:
+# https://en.wikibooks.org/wiki/FFMPEG_An_Intermediate_Guide/image_sequence#Not_numbered_or_no_regular_pattern
+#
+
+# function to print help message and exit
+usage() { 
+  cat <<EOM
+  $0 -p <PREFIX> [-s SRCDIR] [-d DSTDIR]"
+  -p <PREFIX> e.g., all.M1_2pc, etc.
+  -s <SRCDIR> Directory where the source images files are located. Default: /home/smoon/Dropbox/gc/figures-all
+  -d <DSTDIR> Directory where the output movie file is to be stored. Default: /home/smoon/Dropbox/gc/figures-all
+EOM
+  exit 1 
+}
+
+SRCDIR="/home/smoon/Dropbox/gc/figures-all"
+DSTDIR="/home/smoon/Dropbox/gc/figures-all"
+
+# parse options and arguments using getopts 
+while getopts :hp:s:d: opt; do
+  case $opt in
+    h) usage;;
+    p) PREFIX=$OPTARG;;
+    s) SRCDIR=$OPTARG;;
+    d) DSTDIR=$OPTARG;;
+    \?) usage;;
+  esac
+done
+shift "$((OPTIND-1))"
+(( $# != 0 )) && usage # positional argument is not allowed
+
+[ -z "$PREFIX" ] && usage
+
+ffmpeg -framerate 10 -pattern_type glob -i "$SRCDIR/$PREFIX.????.png" -codec:v libx264 -pix_fmt yuv420p -vf scale=1920:-2 $DSTDIR/$PREFIX.mp4

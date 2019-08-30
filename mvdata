@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# A simple rsync wrapper for moving data across some SNU-related machines
+# Author: Sanghyuk Moon
+# Date: July 2019
+
+# function to print help message and exit
+usage() { 
+  cat <<EOM
+  -------------------------------------------------------------------
+  Usage: mvdata [-r] [-t] SRC DST
+  -------------------------------------------------------------------
+  Options:
+  -r Remove source files (turn on rsync --remove-source-files option)
+  -t Review command before execution
+  -------------------------------------------------------------------
+  Examples:
+  1. transfer a whole directory "machine:/path/to/dir" to "/path/to/local/dir" and remove source files
+     \$ mvdata -r machine:/path/to/dir /path/to/local
+  2. copy all files under "machine:/path/to/dir" into /path/to/local/dir
+     \$ mvdata machine:/path/to/dir/ /path/to/local/dir
+  * WARNING: Trailing slash in SRC changes the behavior
+  * Note   : you may need to add machine in .ssh/config file
+  -------------------------------------------------------------------
+EOM
+  exit 1 
+}
+
+if (( $# == 0 )); then
+  usage
+  exit 1
+fi
+
+RSYNC="rsync --archive --progress --partial-dir=.rsync-partial"
+REVIEW=0
+
+# parse options and arguments using getopts 
+while getopts :hm:s:d:rt opt; do
+  case $opt in
+    h) usage;;
+    r) RSYNC="$RSYNC --remove-source-files";;
+    t) REVIEW=1;;
+    \?) usage;;
+  esac
+done
+shift "$((OPTIND-1))"
+SRC=$1
+DST=$2
+
+if (( $REVIEW == 1 )); then
+  echo $RSYNC $SRC $DST
+else
+  $RSYNC $SRC $DST
+fi

@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+"""
+Calculates lookback time for given redshift z
+"""
+from scipy.integrate import quad
+import sys
+
+# Cosmological parameters from Planck 2015 results
+H0 = 0.06934 # in Gyr^(-1)
+W0 = 0.308
+
+def func(z):
+    return 1./( (1+z) * (W0*(1+z)**3 + 1 - W0)**0.5 )
+
+print("{:f} Gyr".format(quad(func, 0.0, float(sys.argv[1]))[0]/H0))
