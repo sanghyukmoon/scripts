@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# A simple rsync wrapper for moving data across some SNU-related machines
+# A simple rsync wrapper for moving data across machines
 # Author: Sanghyuk Moon
 # Date: July 2019
 
