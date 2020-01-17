@@ -8,7 +8,8 @@
 usage() { 
   cat <<EOM
   -------------------------------------------------------------------
-  Usage: fcheck START END
+  Usage: fcheck PREFIX POSTFIX START END
+                (PREFIX.####.POSTFIX)
   -------------------------------------------------------------------
 EOM
   exit 1 
@@ -23,14 +24,13 @@ while getopts :h opt; do
   esac
 done
 shift "$((OPTIND-1))"
-START=$1
-END=$2
+PREFIX=$1
+POSTFIX=$2
+START=$3
+END=$4
 STEP=1
 
 for i in $(seq -f "%04g" $START $STEP $END); do
-  FILE=gc.$i.vtk
-#  if [ -f "$FILE" ]; then
-#    echo "$FILE exist"
-#  fi
+  FILE=$PREFIX.$i.$POSTFIX
   [ ! -f "$FILE" ] && echo "$FILE does not exist"
 done
