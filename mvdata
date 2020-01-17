@@ -35,7 +35,7 @@ RSYNC="rsync --archive --progress --partial-dir=.rsync-partial"
 REVIEW=0
 
 # parse options and arguments using getopts 
-while getopts :hm:s:d:rt opt; do
+while getopts :hrt opt; do
   case $opt in
     h) usage;;
     r) RSYNC="$RSYNC --remove-source-files";;
