@@ -58,6 +58,6 @@ else
   do
     ls $INDIR/id*/gc*.`printf "%04d" $i`.*vtk >> $FLIST
   done
-  rsync -a --remove-source-files --files-from $FLIST $SRC $DST
+  rsync -a --progress --remove-source-files --files-from $FLIST $SRC $DST
   rm $FLIST
 fi
