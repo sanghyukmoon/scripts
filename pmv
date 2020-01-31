@@ -26,7 +26,6 @@ if (( $# == 0 )); then
   exit 1
 fi
 
-FLIST="pmv_file_list.txt"
 SRC=.
 DST=/tigress/sm69
 REVIEW=0
@@ -45,6 +44,7 @@ shift "$((OPTIND-1))"
 INDIR=$1
 START=$2
 END=$3
+FLIST=pmv_file_list_$INDIR.txt
 
 if (( $REVIEW == 1 )); then
   echo 'for i in $(seq $START $END)'
@@ -58,6 +58,6 @@ else
   do
     ls $INDIR/id*/gc*.`printf "%04d" $i`.*vtk >> $FLIST
   done
-  rsync -a --progress --remove-source-files --files-from $FLIST $SRC $DST
+  rsync --archive --progress --remove-source-files --files-from $FLIST $SRC $DST
   rm $FLIST
 fi
