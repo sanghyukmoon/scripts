@@ -32,14 +32,13 @@ if (( $# == 0 )); then
 fi
 
 RSYNC="rsync --archive --progress --partial-dir=.rsync-partial"
-REVIEW=0
 
 # parse options and arguments using getopts 
 while getopts :hrt opt; do
   case $opt in
     h) usage;;
     r) RSYNC="$RSYNC --remove-source-files";;
-    t) REVIEW=1;;
+    t) RSYNC="$RSYNC --dry-run";;
     \?) usage;;
   esac
 done
@@ -47,8 +46,4 @@ shift "$((OPTIND-1))"
 SRC=$1
 DST=$2
 
-if (( $REVIEW == 1 )); then
-  echo $RSYNC $SRC $DST
-else
-  $RSYNC $SRC $DST
-fi
+$RSYNC $SRC $DST
