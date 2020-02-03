@@ -8,19 +8,22 @@
 usage() { 
   cat <<EOM
   -------------------------------------------------------------------
-  Usage: mvdata [-r] [-t] SRC DST
+  Usage: mvdata [-r] [-e] [-t] SRC DST
   -------------------------------------------------------------------
   Options:
   -r Remove source files (turn on rsync --remove-source-files option)
+  -e Transfer vtk files only, excluding everything else
   -t Review command before execution
   -------------------------------------------------------------------
   Examples:
   1. transfer a whole directory "machine:/path/to/dir" to "/path/to/local/dir" and remove source files
      \$ mvdata -r machine:/path/to/dir /path/to/local
   2. copy all files under "machine:/path/to/dir" into /path/to/local/dir
-     \$ mvdata machine:/path/to/dir/ /path/to/local/dir
-  * WARNING: Trailing slash in SRC changes the behavior
+     \$ mvdata machine:/path/to/dir/ /path/to/local/dir/
+  * WARNING: Trailing slash in SRC changes the behavior;
   * Note   : you may need to add machine in .ssh/config file
+             For using trailing slash in DST, see this article
+             https://unix.stackexchange.com/questions/402555/why-add-a-trailing-slash-after-an-rsync-destination
   -------------------------------------------------------------------
 EOM
   exit 1 
@@ -34,10 +37,11 @@ fi
 RSYNC="rsync --archive --progress --partial-dir=.rsync-partial"
 
 # parse options and arguments using getopts 
-while getopts :hrt opt; do
+while getopts :hret opt; do
   case $opt in
     h) usage;;
     r) RSYNC="$RSYNC --remove-source-files";;
+    e) RSYNC="$RSYNC --include=*/ --include=*.vtk --exclude=*";;
     t) RSYNC="$RSYNC --dry-run";;
     \?) usage;;
   esac
