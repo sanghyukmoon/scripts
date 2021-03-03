@@ -10,24 +10,27 @@
 # function to print help message and exit
 usage() { 
   cat <<EOM
-  $0 -p <PREFIX> [-s SRCDIR] [-d DSTDIR]"
+  $0 -p <PREFIX> [-s SRCDIR] [-d DSTDIR] [-f FRAMERATE]"
   -p <PREFIX> e.g., all.M1_2pc, etc.
   -s <SRCDIR> Directory where the source images files are located. Default to the current dir.
   -d <DSTDIR> Directory where the output movie file is to be stored. Default to the current dir.
+  -f <FRAMERATE> Frame rate (Default = 10).
 EOM
   exit 1 
 }
 
 SRCDIR="."
 DSTDIR="."
+FRATE=10
 
 # parse options and arguments using getopts 
-while getopts :hp:s:d: opt; do
+while getopts :hp:s:d:f: opt; do
   case $opt in
     h) usage;;
     p) PREFIX=$OPTARG;;
     s) SRCDIR=$OPTARG;;
     d) DSTDIR=$OPTARG;;
+    f) FRATE=$OPTARG;;
     \?) usage;;
   esac
 done
@@ -39,4 +42,4 @@ shift "$((OPTIND-1))"
 #ffmpeg -framerate 10 -pattern_type glob -i "$SRCDIR/$PREFIX.???.png" -codec:v libx264 -pix_fmt yuv420p -vf scale=2560:-2 $DSTDIR/$PREFIX.mp4
 
 # make lossless video from the png images
-ffmpeg -framerate 10 -pattern_type glob -i "$SRCDIR/$PREFIX.????.png" -codec:v copy $DSTDIR/$PREFIX.mp4
+ffmpeg -framerate $FRATE -pattern_type glob -i "$SRCDIR/$PREFIX.????.png" -codec:v copy $DSTDIR/$PREFIX.mp4
