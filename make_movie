@@ -39,7 +39,8 @@ shift "$((OPTIND-1))"
 
 [ -z "$PREFIX" ] && usage
 
-#ffmpeg -framerate 10 -pattern_type glob -i "$SRCDIR/$PREFIX.???.png" -codec:v libx264 -pix_fmt yuv420p -vf scale=2560:-2 $DSTDIR/$PREFIX.mp4
+# lossless video from the png images
+#ffmpeg -framerate $FRATE -pattern_type glob -i "$SRCDIR/$PREFIX.????.png" -codec:v copy $DSTDIR/$PREFIX.mp4
 
-# make lossless video from the png images
-ffmpeg -framerate $FRATE -pattern_type glob -i "$SRCDIR/$PREFIX.????.png" -codec:v copy $DSTDIR/$PREFIX.mp4
+# windows-playable format
+ffmpeg -framerate $FRATE -pattern_type glob -i "$SRCDIR/$PREFIX.????.png" -c:v libx264 -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" $DSTDIR/$PREFIX.mp4
