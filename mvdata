@@ -41,7 +41,7 @@ while getopts :hret opt; do
   case $opt in
     h) usage;;
     r) RSYNC="$RSYNC --remove-source-files";;
-    e) RSYNC="$RSYNC --include=*/ --include=*.vtk --exclude=*";;
+    e) RSYNC="$RSYNC --include=*/ --include=*.vtk --include=*.star --exclude=*";;
     t) RSYNC="$RSYNC --dry-run";;
     \?) usage;;
   esac
