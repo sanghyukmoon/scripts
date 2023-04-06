@@ -10,5 +10,6 @@ echo
 
 if [[ $REPLY =~ ^Y$ ]]
 then
-  perl -e 'for(<*>){((stat)[9]<(unlink))}'
+#  perl -e 'for(<*>){((stat)[9]<(unlink))}'
+  find . | xargs rm
 fi
