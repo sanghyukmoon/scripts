@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# A simple find wrapper
+# Author: Sanghyuk Moon
+# Date: Feb 2025
+
+# function to print help message and exit
+usage() { 
+  cat <<EOM
+  -------------------------------------------------------------------
+  Usage: find "PATTERN" DAYS_OLD 
+  -------------------------------------------------------------------
+EOM
+  exit 1 
+}
+
+if (( $# == 0 )); then
+  usage
+  exit 1
+fi
+
+MTIME=""
+
+# parse options and arguments using getopts 
+while getopts :h opt; do
+  case $opt in
+    h) usage;;
+    \?) usage;;
+  esac
+done
+shift "$((OPTIND-1))"
+
+find . -maxdepth 1 -name "$1" -mtime -$2 -printf "%Ab %Ad %AH:%AM %f\n"
