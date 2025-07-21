@@ -30,4 +30,4 @@ while getopts :h opt; do
 done
 shift "$((OPTIND-1))"
 
-find . -maxdepth 1 -name "$1" -mtime -$2 -printf "%Ab %Ad %AH:%AM %f\n"
+find . -maxdepth 1 -name "$1" -mtime $2 -printf "%Ab %Ad %AH:%AM %f\n"
