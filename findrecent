@@ -8,7 +8,10 @@
 usage() { 
   cat <<EOM
   -------------------------------------------------------------------
-  Usage: find "PATTERN" DAYS_OLD 
+  Usage: find "PATTERN" (+-)DAYS_OLD
+
+  Plus sign for older than DAYS_OLD files
+  Minus sign for newer than DAYS_OLD files
   -------------------------------------------------------------------
 EOM
   exit 1 
@@ -19,8 +22,6 @@ if (( $# == 0 )); then
   exit 1
 fi
 
-MTIME=""
-
 # parse options and arguments using getopts 
 while getopts :h opt; do
   case $opt in
@@ -30,4 +31,4 @@ while getopts :h opt; do
 done
 shift "$((OPTIND-1))"
 
-find . -maxdepth 1 -name "$1" -mtime $2 -printf "%Ab %Ad %AH:%AM %f\n"
+find . -maxdepth 1 -name "$1" -mtime $2 -printf "%Tb %Td %TH:%TM %f\n"
