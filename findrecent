@@ -8,7 +8,9 @@
 usage() { 
   cat <<EOM
   -------------------------------------------------------------------
-  Usage: find "PATTERN" (+-)DAYS_OLD
+  Usage: findrecent [-d] "PATTERN" (+-)DAYS_OLD
+
+  -d Delete matched files instead of printing them
 
   Plus sign for older than DAYS_OLD files
   Minus sign for newer than DAYS_OLD files
@@ -22,13 +24,20 @@ if (( $# == 0 )); then
   exit 1
 fi
 
+delete_matches=false
+
 # parse options and arguments using getopts 
-while getopts :h opt; do
+while getopts :hd opt; do
   case $opt in
     h) usage;;
+    d) delete_matches=true;;
     \?) usage;;
   esac
 done
 shift "$((OPTIND-1))"
 
-find . -maxdepth 1 -name "$1" -mtime $2 -printf "%Tb %Td %TH:%TM %f\n"
+if [[ "$delete_matches" == true ]]; then
+  find . -maxdepth 1 -name "$1" -mtime $2 -delete
+else
+  find . -maxdepth 1 -name "$1" -mtime $2 -printf "%Tb %Td %TH:%TM %f\n"
+fi
